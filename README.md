@@ -1,1 +1,0 @@
-# Pick Hacks 2025
