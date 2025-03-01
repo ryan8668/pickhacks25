@@ -1,14 +1,18 @@
 import zmq
+import sys
 import numpy as np
-import Python.pose_estimation.posenet as posenet
-import Python.server.client_comand_handling as client_comand_handling
+import client_comand_handling
 
-# Setip ZMQ
+# Add pose_estimation to path
+sys.path.insert(0, 'Python\pose_estimation')
+import movenet
+
+# Setup ZMQ
 context = zmq.Context()
 socket = context.socket(zmq.REP)
 socket.bind("tcp://*:5555")
 
-posenet.initialize_posenet()
+movenet.initialize_posenet("Pose Estimation Models\movenet.tflite")
 
 # Create array to store posenet data
 keypoints = np.zeros((17, 3))
@@ -25,7 +29,8 @@ while True:
         img = np.array(message, dtype=np.uint8).reshape(256, 256, 3)
 
         # Make prediction
-        keypoints = posenet.keypoint_prediction(img).reshape(17, 3)
+        keypoints = movenet.keypoint_prediction(img).reshape(17, 3)
+        response = keypoints.tobytes()
     else:
         response = b"Invalid message size"
     

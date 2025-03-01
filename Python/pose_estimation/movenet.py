@@ -1,8 +1,8 @@
 import tensorflow as tf
 
-def initialize_posenet():
+def initialize_posenet(path_to_model):
     # Setup TF Lite Interpreter
-    interpreter = tf.lite.Interpreter(model_path="4.tflite")
+    interpreter = tf.lite.Interpreter(model_path=path_to_model)
 
     # Get input and output tensors
     input_details = interpreter.get_input_details()
