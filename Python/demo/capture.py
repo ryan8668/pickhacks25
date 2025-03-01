@@ -1,3 +1,5 @@
+# This file is just a demonstration of PoseNet, the code is not used in the project
+
 import tensorflow as tf
 import cv2
 
