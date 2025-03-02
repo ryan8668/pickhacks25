@@ -5,7 +5,7 @@ import cv2
 
 def initialize_posenet():
     # Setup TF Lite Interpreter
-    interpreter = tf.lite.Interpreter(model_path="Pose Estimation Models\posenet.tflite")
+    interpreter = tf.lite.Interpreter(model_path="Pose Estimation Models\movenet.tflite")
 
     # Get input and output tensors
     input_details = interpreter.get_input_details()
@@ -39,7 +39,7 @@ while success:
     # Iterate through keypoints
     for keypoint in keypoints[0,0,:,:]:
         # Check confidence threshold
-        if keypoint[2] > 0.3:
+        if keypoint[2] > 0.5:
             # The first two channels of the last dimension represents the yx coordinates (normalized to image frame, i.e. range in [0.0, 1.0]) of the 17 keypoints
             yc = int(keypoint[0] * y)
             xc = int(keypoint[1] * x)

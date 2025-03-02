@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-def initialize_posenet(path_to_model):
+def initialize_movenet(path_to_model):
     # Setup TF Lite Interpreter
     interpreter = tf.lite.Interpreter(model_path=path_to_model)
 
