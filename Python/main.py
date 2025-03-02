@@ -1,16 +1,15 @@
 import cv2
 import platform
-import zmq
+import socket
 import json
 
 import pose_estimation.movenet as movenet
 
+HOST = '127.0.0.1'
+PORT = 5555
+
 camera = cv2.VideoCapture(0)
 success, img = camera.read()
-
-context = zmq.Context()
-socket = context.socket(zmq.PUSH)
-socket.bind("tcp://*:5555")
 
 platform = str(platform.platform()).upper()
 movenetPath = ""
@@ -20,13 +19,27 @@ else:
     movenetPath = "Pose Estimation Models\\movenet.tflite"
 
 interpreter, model_details = movenet.initialize_movenet(str(movenetPath))
-while True:
-    success, img = camera.read()
-    if not success:
-        print("Failed to read from camera")
-        break
 
-    new_img = cv2.resize(img, (256, 256))
-    keypoints = movenet.keypoint_prediction(interpreter, model_details, new_img)
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server:
+    server.bind((HOST, PORT))
+    server.listen()
+    print(f"Server listening on {HOST}:{PORT}")
 
-    socket.send_json(json.dumps(keypoints.tolist()))
+    conn, addr = server.accept()
+
+    with conn:
+        print('Connected by', addr)
+        while True:
+            new_img = cv2.resize(img, (256, 256))
+            data = movenet.keypoint_prediction(interpreter, model_details, new_img).reshape(17,3)
+            
+            # Send JSON data with a newline delimiter
+            conn.sendall((str(data) + "\n").encode('utf-8'))
+
+            success, img = camera.read()
+
+            if not success:
+                print("Failed to read from camera")
+                break
+
+camera.release()
