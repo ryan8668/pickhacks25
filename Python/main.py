@@ -21,3 +21,5 @@ interpreter, model_details = movenet.initialize_movenet(movenetPath)
 while success:
     new_img = cv2.resize(img, (256, 256))
     keypoints = movenet.keypoint_prediction(interpreter, model_details, new_img)
+
+    socket.send(keypoints.tobytes())    
