@@ -14,8 +14,3 @@ def initialize_server():
 
 # Create array to store posenet data
 keypoints = np.zeros((17, 3))
-
-while True:
-    message = socket.recv()
-    
-    socket.send(response)

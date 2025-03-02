@@ -55,6 +55,7 @@ while success:
 
     # Reads next frame
     success, img = capture.read()
+    
 
 capture.release()
 cv2.destroyAllWindows()

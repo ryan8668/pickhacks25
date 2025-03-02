@@ -1,6 +1,3 @@
-import zmq
-import sys
-import numpy as np
 import cv2
 
 import server.server as server
@@ -16,3 +13,11 @@ interpreter, model_details = movenet.initialize_movenet("Pose Estimation Models\
 while success:
     new_img = cv2.resize(img, (256, 256))
     keypoints = movenet.keypoint_prediction(interpreter, model_details, new_img)
+
+    socket.send(keypoints)
+
+    print(keypoints)
+
+    success, img = camera.read()
+
+camera.release()
