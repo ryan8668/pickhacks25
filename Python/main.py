@@ -15,12 +15,11 @@ socket.bind("tcp://*:5555")
 platform = str(platform.platform()).upper()
 movenetPath = ""
 if ("LINUX" in platform):
-    movenetPath = "../../Pose Estimation Models/movenet.tflite"
+    movenetPath = "../Pose Estimation Models/movenet.tflite"
 else:
     movenetPath = "Pose Estimation Models\\movenet.tflite"
 
-interpreter, model_details = movenet.initialize_movenet(movenetPath)
-
+interpreter, model_details = movenet.initialize_movenet(str(movenetPath))
 while True:
     success, img = camera.read()
     if not success:
